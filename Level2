@@ -1,0 +1,137 @@
+import java.util.Arrays;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+
+public class Level2 {
+	static Scanner in;
+	static String[] board;
+	static String turn;
+
+	public static void main(String[] args) {
+		in = new Scanner(System.in);
+		board = new String[16];
+		turn = "X";
+		String winner = null;
+		populateEmptyBoard();
+
+		System.out.println("TIC TAC TOE TIME!!!");
+		System.out.println("--------------------------------");
+		printBoard();
+		System.out.println("X's go first! Enter a slot number to place X in:");
+
+		while (winner == null) {
+			int numInput;
+			
+	// following code is borrowed
+			try {
+				numInput = in.nextInt();
+				if (!(numInput > 0 && numInput <= 16)) {
+					System.out.println("The number you have dialed is not availible; try again later");
+					continue;
+				}
+			} catch (InputMismatchException e) {
+				System.out.println("The number you have dialed is not availible; try again later");
+				continue;
+	// now its ours
+			}
+			if (board[numInput-1].equals(String.valueOf(numInput))) {
+				board[numInput-1] = turn;
+				if (numInput>=9) {
+					if (turn.equals("X")) {
+						turn = "O ";
+					} else {
+						turn = "X ";
+					}
+				} else {
+					if (turn.equals("X")) {
+						turn = "O";
+					} else {
+						turn = "X";
+					}
+				}
+				printBoard();
+				winner = checkWinner();
+			} else {
+				System.out.println("You silly goose-- someone already played that spot! Try again!");
+				continue;
+			}
+		}
+		if (winner.equalsIgnoreCase("draw")) {
+			System.out.println("It is a draw... play again to see the ultimte champion");
+		} else {
+			System.out.println("YAYY! " + winner + "'s have won! Play again you won't");
+		}
+	}
+
+	static String checkWinner() {
+		for (int a = 0; a < 10; a++) {
+			String line = null;
+			switch (a) {
+			case 0:
+				line = board[0] + board[1] + board[2] + board[3];
+				break;
+			case 1:
+				line = board[4] + board[5] + board[6] + board[7];
+				break;
+			case 2:
+				line = board[8] + board[9] + board[10] + board[11];
+				break;
+			case 3:
+				line = board[12] + board[13] + board[14] + board[15];
+				break;
+			case 4:
+				line = board[0] + board[4] + board[8] + board[12];
+				break;
+			case 5:
+				line = board[1] + board[5] + board[9] + board[13];
+				break;
+			case 6:
+				line = board[2] + board[6] + board[10] + board[14];
+				break;
+			case 7:
+				line = board[3] + board[7] + board[11] + board[15];
+				break;
+			case 8:
+				line = board[0] + board[5] + board[10] + board[15];
+				break;
+			case 9:
+				line = board[3] + board[6] + board[9] + board[12];
+				break;
+			}
+			if (line.equals("XXXX")) {
+				return "X";
+			} else if (line.equals("OOOO")) {
+				return "O";
+			}
+		}
+
+		for (int a = 0; a < 16; a++) {
+			if (Arrays.asList(board).contains(String.valueOf(a+1))) {
+				break;
+			}
+			else if (a == 15) return "draw";
+		}
+
+		System.out.println(turn + "'s turn! Enter a number to place " + turn + " in.");
+		return null;
+	}
+
+	static void printBoard() {
+		System.out.println("---------------------");
+		System.out.println("| " + board[0] + "  | " + board[1] + "  | " + board[2] + "  | " + board[3] + "  |");
+		System.out.println("|-------------------|");
+		System.out.println("| " + board[4] + "  | " + board[5] + "  | " + board[6] + "  | " + board[7] + "  |");
+		System.out.println("|-------------------|");
+		System.out.println("| " + board[8] + "  | " + board[9] + " | " + board[10] + " | " + board[11] + " |");
+		System.out.println("|-------------------|");
+		System.out.println("| " + board[12] + " | " + board[13] + " | " + board[14] + " | " + board[15] + " |");
+		System.out.println("---------------------");
+	}
+
+	static void populateEmptyBoard() {
+		for (int a = 0; a < 16; a++) {
+			board[a] = String.valueOf(a+1);
+		}
+	}
+}
